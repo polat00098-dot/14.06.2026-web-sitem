@@ -1,0 +1,7 @@
+{
+  "version": 2,
+  "buildCommand": "cd Web-Sitem--main-main && npm run build",
+  "outputDirectory": "Web-Sitem--main-main/dist",
+  "installCommand": "cd Web-Sitem--main-main && npm install",
+  "framework": null
+}
