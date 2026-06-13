@@ -1,88 +1,12 @@
 ﻿import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useSiteMedia } from '../hooks/useSiteMedia';
+import { useServicesData } from '../hooks/useServicesData';
 
 const Services: React.FC = () => {
   const { heroBg } = useSiteMedia();
-  const serviceItems = [
-    {
-      id: "01",
-      title: "Exproof Ekipmanların Periyodik Kontrolü",
-      header: "Düzenli Kontrol, Kesintisiz Güvenlik",
-      desc: "Tesisinizde bulunan exproof ekipmanların EN 60079-17 standardına uygun olarak periyodik muayenelerini gerçekleştiriyor, güvenli çalışma ortamının sürekliliğini sağlıyoruz.",
-      secondaryDesc: "Exproof ekipmanların zamanla işlevselliğini yitirmesi patlama riskini artırır. Uzman ekibimizle periyodik kontrolleri yaparak olası tehlikelerin önüne geçiyoruz.",
-      icon: "content_paste_search",
-      bullets: [
-        "Görsel, Yakın ve Detaylı Muayene Seçenekleri",
-        "Yasal Mevzuata Uygun Raporlama",
-        "Risk Değerlendirmesi ve Önceliklendirme"
-      ]
-    },
-    {
-      id: "02",
-      title: "Exproof Ekipman Seçimi, Montajı Ve Bakım Onarım Eğitimi",
-      header: "Exproof Ekipman Seçimi, Montajı Ve Bakım Onarım Eğitimi",
-      desc: "Teknik personeliniz için özel olarak hazırlanan bu eğitim programı ile doğru ekipman seçimi, standartlara uygun montaj ve etkin bakım tekniklerini aktarıyoruz.",
-      secondaryDesc: "Personelinizin exproof ekipmanlar konusundaki yetkinliğini artırarak, montaj ve bakım hatalarından kaynaklanan riskleri minimuma indiriyoruz.",
-      icon: "school",
-      bullets: [
-        "Uygulamalı Montaj Teknikleri",
-        "Kablo Glend Bağlantı Uygulamaları",
-        "Bakım ve Onarım Prosedürleri"
-      ]
-    },
-    {
-      id: "03",
-      title: "ATEX Bilgilendirme Eğitimi",
-      header: "Farkındalık Hayat Kurtarır",
-      desc: "Patlayıcı ortamlarda çalışan tüm personel için temel farkındalık eğitimi. Patlamadan korunma dokümanının anlaşılması ve güvenli çalışma kurallarının benimsenmesi hedeflenir.",
-      secondaryDesc: "Çalışanlarınızın patlayıcı ortam risklerini tanıması, iş güvenliği kültürünün en önemli parçasıdır. ATEX eğitimi ile tehlikelerin farkında olan bilinçli bir kadro oluşturun.",
-      icon: "warning",
-      bullets: [
-        "Patlama Üçgeni ve Riskleri",
-        "Bölge (Zone) Sınıflandırmaları",
-        "ATEX Direktifleri Hakkında Genel Bilgi"
-      ]
-    },
-    {
-      id: "04",
-      title: "PKD Raporu Hazırlama",
-      header: "Yasal Mevzuata Tam Uyum",
-      desc: "Tesisinizdeki tehlikeli bölgelerin belirlenmesi, tutuşturucu kaynakların analizi ve alınması gereken önlemlerin belirlenmesi süreçlerini kapsayan kapsamlı dokümantasyon hizmeti.",
-      secondaryDesc: "İş yerinizdeki patlayıcı ortam risklerini değerlendirerek, yasal zorunluluk olan Patlamadan Korunma Dokümanı'nı (PKD) profesyonelce hazırlıyoruz.",
-      icon: "description",
-      bullets: [
-        "Tehlikeli Bölge Sınıflandırma Planları",
-        "Kimyasal Madde Risk Analizi",
-        "Teknik ve Organizasyonel Tedbirler"
-      ]
-    },
-    {
-      id: "05",
-      title: "Exproof Ekipmanların Montaj ve Seçim Danışmanlığı",
-      header: "Doğru Ekipman, Uzun Ömürlü Tesis",
-      desc: "Yatırımlarınızın doğru yönlendirilmesi için, proses şartlarınıza ve bölge sınıflandırmanıza en uygun ekipmanların seçimi ve kurulumu konusunda mühendislik desteği sunuyoruz.",
-      secondaryDesc: "Yanlış ekipman seçimi hem güvenlik riski yaratır hem de gereksiz maliyetlere yol açar. Deneyimli mühendislerimizle en uygun teknik çözümleri projelendiriyoruz.",
-      icon: "build",
-      bullets: [
-        "Doğru Sertifikasyon ve EPL Seçimi",
-        "Maliyet Etkin Çözümler",
-        "EN 60079-14 Montaj Standartlarına Uyum"
-      ]
-    },
-    {
-      id: "06",
-      title: "Muayene Sonrası İyileştirme Danışmanlığı",
-      header: "Tespitlerden Çözüme",
-      desc: "Denetimler sonucu ortaya çıkan uygunsuzlukların en hızlı ve ekonomik şekilde giderilmesi için teknik danışmanlık ve süpervizörlük hizmeti.",
-      secondaryDesc: "Muayene raporlarında çıkan eksikliklerin giderilmesi sürecinde yalnız değilsiniz. Düzeltici faaliyetlerin planlanması ve uygulanması aşamalarında yanınızdayız.",
-      icon: "trending_up",
-      bullets: [
-        "Aksiyon Planı Oluşturma",
-        "Revizyon Süreç Takibi",
-        "Uygunsuzlukların Kapatılması ve Doğrulama"
-      ]
-    }
-  ];
+  const navigate = useNavigate();
+  const serviceItems = useServicesData();
 
   return (
     <main>
@@ -99,42 +23,48 @@ const Services: React.FC = () => {
           <p className="max-w-2xl text-base font-normal leading-relaxed text-[#dcdcdc] sm:text-lg">
             Endüstriyel tesisler için risk analizi, periyodik kontrol, eğitim ve danışmanlık hizmetlerimizle güvenliğinizi en üst düzeye taşıyoruz.
           </p>
+          <p className="max-w-4xl text-sm font-normal leading-relaxed text-[#c7b9ab] sm:text-base">
+            Exproof ekipmanların periyodik kontrolü, Ex ekipman periyodik kontrolü, Exproof ekipman bakım eğitimi, Ex ekipman eğitimi,
+            PKD (Patlamadan Korunma Dokümanı), ATEX bilgilendirme eğitimi ve Ex ekipman danışmanlığı başlıklarında uçtan uca hizmet veriyoruz.
+          </p>
         </div>
       </section>
 
       <section className="py-20 bg-[#181511]">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 space-y-24">
-          {serviceItems.map((item, idx) => (
-            <div key={idx} className="grid lg:grid-cols-2 gap-12 items-center">
-              <div className={`order-2 ${idx % 2 !== 0 ? 'lg:order-2' : 'lg:order-1'} relative group`}>
-                <div className="absolute -inset-4 rounded-xl bg-gradient-to-tr from-primary/10 to-transparent opacity-50 blur-lg transition-opacity group-hover:opacity-75"></div>
-                <div className="relative overflow-hidden rounded-xl border border-surface-border bg-surface-dark p-8 shadow-2xl">
-                  <div className="flex items-center gap-4 mb-6">
-                    <div className="flex size-16 items-center justify-center rounded-lg bg-primary/20 text-primary">
-                      <span className="material-symbols-outlined text-4xl">{item.icon}</span>
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {serviceItems.map((item) => (
+              <div
+                key={item.id}
+                onClick={() => navigate(`/hizmetlerimiz/${item.id}`)}
+                className="group relative cursor-pointer"
+              >
+                <div className="absolute -inset-1 rounded-2xl bg-gradient-to-r from-primary to-orange-400 opacity-0 blur-xl transition-opacity duration-500 group-hover:opacity-40"></div>
+                <div className="relative h-full overflow-hidden rounded-2xl border border-surface-border bg-surface-dark p-8 transition-all duration-500 group-hover:border-primary/50 group-hover:shadow-2xl">
+                  <div className="flex items-center justify-between mb-6">
+                    <div className="flex size-14 items-center justify-center rounded-lg bg-primary/20 text-primary transition-all group-hover:bg-primary group-hover:text-white">
+                      <span className="material-symbols-outlined text-3xl">{item.icon}</span>
                     </div>
-                    <h3 className="text-2xl font-bold text-white">{item.title}</h3>
+                    <span className="text-4xl font-bold text-primary/30 group-hover:text-primary/60 transition-colors">{item.id}</span>
                   </div>
-                  <p className="text-[#b9ab9d] mb-8 leading-relaxed">{item.desc}</p>
-                  <ul className="space-y-3">
-                    {item.bullets.map((bullet, bIdx) => (
-                      <li key={bIdx} className="flex items-start gap-3">
-                        <span className="material-symbols-outlined text-primary text-sm mt-1">check_circle</span>
-                        <span className="text-sm text-gray-300">{bullet}</span>
+                  <h3 className="text-xl font-bold text-white mb-4 group-hover:text-primary transition-colors line-clamp-3">{item.title}</h3>
+                  <p className="text-sm text-[#b9ab9d] mb-6 line-clamp-2">{item.desc}</p>
+                  <ul className="space-y-2 mb-6">
+                    {item.bullets.slice(0, 2).map((bullet, bIdx) => (
+                      <li key={bIdx} className="flex items-start gap-2">
+                        <span className="material-symbols-outlined text-primary text-xs mt-0.5 flex-shrink-0">check_circle</span>
+                        <span className="text-xs text-gray-400">{bullet}</span>
                       </li>
                     ))}
                   </ul>
+                  <div className="flex items-center justify-between pt-4 border-t border-surface-border">
+                    <span className="text-xs font-semibold text-primary uppercase tracking-wider">Detaylar</span>
+                    <span className="material-symbols-outlined text-primary text-lg group-hover:translate-x-1 transition-transform">arrow_forward</span>
+                  </div>
                 </div>
               </div>
-              <div className={`order-1 ${idx % 2 !== 0 ? 'lg:order-1' : 'lg:order-2'}`}>
-                <div className="h-full flex flex-col justify-center">
-                  <span className="text-primary font-bold tracking-wider uppercase mb-2">Hizmet #{item.id}</span>
-                  <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">{item.header}</h2>
-                  <p className="text-[#b9ab9d] text-lg leading-relaxed">{item.secondaryDesc}</p>
-                </div>
-              </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       </section>
     </main>

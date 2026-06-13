@@ -1,6 +1,8 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { notifySiteMediaUpdated } from '../hooks/useSiteMedia';
+import { defaultServices, type ServiceItem } from '../data/defaultServices';
+import { defaultBlogs } from '../data/defaultBlogs';
 
 interface Partner {
   id: string;
@@ -20,15 +22,30 @@ interface BlogPost {
   content?: string;
 }
 
+const emptyServiceForm = {
+  id: '',
+  title: '',
+  header: '',
+  desc: '',
+  secondaryDesc: '',
+  icon: 'engineering',
+  bulletsText: '',
+  image: '',
+  blogContent: '',
+};
+
 const Admin: React.FC = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isAuthChecking, setIsAuthChecking] = useState(true);
   const [password, setPassword] = useState('');
-  const [activeTab, setActiveTab] = useState<'blogs' | 'clients' | 'images' | 'medya' | 'settings'>('blogs');
+  const [activeTab, setActiveTab] = useState<'blogs' | 'services' | 'clients' | 'images' | 'medya' | 'settings'>('blogs');
 
   const editLogoRef = useRef<HTMLInputElement>(null);
   const editBlogImgRef = useRef<HTMLInputElement>(null);
+  const editServiceImgRef = useRef<HTMLInputElement>(null);
   const [editingPartnerId, setEditingPartnerId] = useState<string | null>(null);
   const [editingBlogId, setEditingBlogId] = useState<string | null>(null);
+  const [editingServiceImageId, setEditingServiceImageId] = useState<string | null>(null);
 
   const [siteLogo, setSiteLogo] = useState('');
   const [siteHeroBg, setSiteHeroBg] = useState('');
@@ -41,6 +58,10 @@ const Admin: React.FC = () => {
   const [newPartner, setNewPartner] = useState({ name: '', category: '', logo: '' });
   
   const [blogs, setBlogs] = useState<BlogPost[]>([]);
+  const [services, setServices] = useState<ServiceItem[]>(defaultServices);
+  const [editingPostId, setEditingPostId] = useState<string | null>(null);
+  const [editingServiceId, setEditingServiceId] = useState<string | null>(null);
+  const [serviceForm, setServiceForm] = useState(emptyServiceForm);
   const [newBlog, setNewBlog] = useState({ 
     title: '', category: 'Teknik', date: new Date().toLocaleDateString('tr-TR'), 
     readTime: '5 Dakika', desc: '', content: '', img: '' 
@@ -56,7 +77,8 @@ const Admin: React.FC = () => {
       .then(r => r.json())
       .then(data => {
         setPartners(data.partners || []);
-        setBlogs(data.blogs || []);
+        setBlogs(data.blogs && data.blogs.length > 0 ? data.blogs : defaultBlogs);
+        setServices(Array.isArray(data.services) && data.services.length > 0 ? data.services : defaultServices);
         setSiteLogo(data.logo || '');
         setSiteHeroBg(data.heroBg || '');
         setSiteAboutImg(data.aboutImg || '');
@@ -64,12 +86,38 @@ const Admin: React.FC = () => {
       .catch(() => {});
   }, []);
 
-  const handleLogin = (e: React.FormEvent) => {
+  useEffect(() => {
+    fetch('/api/admin/session', { credentials: 'include' })
+      .then((response) => {
+        setIsAuthenticated(response.ok);
+      })
+      .catch(() => {
+        setIsAuthenticated(false);
+      })
+      .finally(() => {
+        setIsAuthChecking(false);
+      });
+  }, []);
+
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (password === 'S4rmam21') {
+    try {
+      const response = await fetch('/api/admin/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({ password }),
+      });
+
+      if (!response.ok) {
+        alert('Hatalı şifre! Lütfen tekrar deneyin.');
+        return;
+      }
+
       setIsAuthenticated(true);
-    } else {
-      alert('Hatalı şifre! Lütfen tekrar deneyin.');
+      setPassword('');
+    } catch {
+      alert('Giriş sırasında bir hata oluştu.');
     }
   };
 
@@ -77,8 +125,16 @@ const Admin: React.FC = () => {
     fetch('/api/data', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
       body: JSON.stringify(patch),
-    }).catch(() => {});
+    })
+      .then((response) => {
+        if (response.status === 401) {
+          setIsAuthenticated(false);
+          alert('Oturumunuz sona erdi. Lütfen tekrar giriş yapın.');
+        }
+      })
+      .catch(() => {});
   };
 
   const savePartners = (list: Partner[]) => {
@@ -89,6 +145,11 @@ const Admin: React.FC = () => {
   const saveBlogs = (list: BlogPost[]) => {
     setBlogs(list);
     saveToServer({ blogs: list });
+  };
+
+  const saveServices = (list: ServiceItem[]) => {
+    setServices(list);
+    saveToServer({ services: list });
   };
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>, type: 'partner' | 'blog') => {
@@ -119,7 +180,12 @@ const Admin: React.FC = () => {
     e.preventDefault();
     if (!newBlog.title) return;
     const item: BlogPost = { ...newBlog, id: Date.now().toString() };
-    saveBlogs([item, ...blogs]);
+    if (editingPostId) {
+      saveBlogs(blogs.map((blog) => blog.id === editingPostId ? { ...item, id: editingPostId } : blog));
+    } else {
+      saveBlogs([item, ...blogs]);
+    }
+    setEditingPostId(null);
     setNewBlog({ title: '', category: 'Teknik', date: new Date().toLocaleDateString('tr-TR'), readTime: '5 Dakika', desc: '', content: '', img: '' });
   };
 
@@ -127,6 +193,78 @@ const Admin: React.FC = () => {
     if (window.confirm('Bu öğeyi silmek istediğinizden emin misiniz?')) {
       if (type === 'blog') saveBlogs(blogs.filter(b => b.id !== id));
       else savePartners(partners.filter(p => p.id !== id));
+    }
+  };
+
+  const resetServiceForm = () => {
+    setEditingServiceId(null);
+    setServiceForm(emptyServiceForm);
+  };
+
+  const resetBlogForm = () => {
+    setEditingPostId(null);
+    setNewBlog({ title: '', category: 'Teknik', date: new Date().toLocaleDateString('tr-TR'), readTime: '5 Dakika', desc: '', content: '', img: '' });
+  };
+
+  const startEditBlog = (blog: BlogPost) => {
+    setEditingPostId(blog.id);
+    setNewBlog({
+      title: blog.title,
+      category: blog.category,
+      date: blog.date,
+      readTime: blog.readTime,
+      desc: blog.desc,
+      content: blog.content || '',
+      img: blog.img || '',
+    });
+    setActiveTab('blogs');
+  };
+
+  const submitService = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!serviceForm.title.trim() || !serviceForm.desc.trim()) return;
+
+    const nextService: ServiceItem = {
+      id: serviceForm.id.trim() || String(services.length + 1).padStart(2, '0'),
+      title: serviceForm.title.trim(),
+      header: serviceForm.header.trim() || serviceForm.title.trim(),
+      desc: serviceForm.desc.trim(),
+      secondaryDesc: serviceForm.secondaryDesc.trim() || serviceForm.desc.trim(),
+      icon: serviceForm.icon.trim() || 'engineering',
+      bullets: serviceForm.bulletsText.split('\n').map((item) => item.trim()).filter(Boolean),
+      image: serviceForm.image.trim(),
+      blogContent: serviceForm.blogContent.trim(),
+    };
+
+    if (editingServiceId) {
+      saveServices(services.map((item) => item.id === editingServiceId ? nextService : item));
+    } else {
+      saveServices([...services, nextService]);
+    }
+
+    resetServiceForm();
+  };
+
+  const startEditService = (service: ServiceItem) => {
+    setEditingServiceId(service.id);
+    setServiceForm({
+      id: service.id,
+      title: service.title,
+      header: service.header,
+      desc: service.desc,
+      secondaryDesc: service.secondaryDesc,
+      icon: service.icon,
+      bulletsText: service.bullets.join('\n'),
+      image: service.image || '',
+      blogContent: service.blogContent || '',
+    });
+    setActiveTab('services');
+  };
+
+  const deleteService = (id: string) => {
+    if (window.confirm('Bu hizmeti silmek istediğinizden emin misiniz?')) {
+      saveServices(services.filter((service) => service.id !== id));
+      if (editingServiceId === id) resetServiceForm();
     }
   };
 
@@ -138,6 +276,11 @@ const Admin: React.FC = () => {
   const updateBlogImg = (id: string, imgData: string) => {
     const updated = blogs.map(b => b.id === id ? { ...b, img: imgData } : b);
     saveBlogs(updated);
+  };
+
+  const updateServiceImage = (id: string, imgData: string) => {
+    const updated = services.map((service) => service.id === id ? { ...service, image: imgData } : service);
+    saveServices(updated);
   };
 
   const handleEditLogoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -155,6 +298,15 @@ const Admin: React.FC = () => {
     if (file.size > 2 * 1024 * 1024) { alert("Dosya 2MB'den küçük olmalıdır."); return; }
     const reader = new FileReader();
     reader.onloadend = () => { updateBlogImg(editingBlogId, reader.result as string); setEditingBlogId(null); };
+    reader.readAsDataURL(file);
+  };
+
+  const handleEditServiceImgUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file || !editingServiceImageId) return;
+    if (file.size > 5 * 1024 * 1024) { alert("Dosya 5MB'den küçük olmalıdır."); return; }
+    const reader = new FileReader();
+    reader.onloadend = () => { updateServiceImage(editingServiceImageId, reader.result as string); setEditingServiceImageId(null); };
     reader.readAsDataURL(file);
   };
 
@@ -208,6 +360,27 @@ const Admin: React.FC = () => {
     }
   };
 
+  const handleLogout = async () => {
+    try {
+      await fetch('/api/admin/logout', {
+        method: 'POST',
+        credentials: 'include',
+      });
+    } catch {
+      // ignore logout network errors and clear local auth state
+    }
+    setIsAuthenticated(false);
+    setPassword('');
+  };
+
+  if (isAuthChecking) {
+    return (
+      <div className="min-h-screen bg-background-dark flex items-center justify-center p-4 text-white">
+        Oturum kontrol ediliyor...
+      </div>
+    );
+  }
+
   if (!isAuthenticated) {
     return (
       <div className="min-h-screen bg-background-dark flex items-center justify-center p-4">
@@ -250,6 +423,13 @@ const Admin: React.FC = () => {
               Blog
             </button>
             <button 
+              onClick={() => setActiveTab('services')}
+              className={`px-6 py-3 rounded-xl text-sm font-bold transition-all flex items-center gap-2 ${activeTab === 'services' ? 'bg-primary text-white shadow-lg' : 'text-text-secondary hover:text-white'}`}
+            >
+              <span className="material-symbols-outlined text-lg">engineering</span>
+              Hizmetler
+            </button>
+            <button 
               onClick={() => setActiveTab('clients')}
               className={`px-6 py-3 rounded-xl text-sm font-bold transition-all flex items-center gap-2 ${activeTab === 'clients' ? 'bg-primary text-white shadow-lg' : 'text-text-secondary hover:text-white'}`}
             >
@@ -278,7 +458,7 @@ const Admin: React.FC = () => {
               Ayarlar
             </button>
           </div>
-          <button onClick={() => setIsAuthenticated(false)} className="text-xs font-bold text-red-400 hover:text-red-300 flex items-center gap-1">
+           <button onClick={handleLogout} className="text-xs font-bold text-red-400 hover:text-red-300 flex items-center gap-1">
              <span className="material-symbols-outlined text-sm">logout</span> Çıkış
           </button>
         </header>
@@ -288,10 +468,17 @@ const Admin: React.FC = () => {
             {/* Blog Form logic ... */}
             <div className="lg:col-span-5">
               <div className="bg-surface-dark border border-surface-border rounded-3xl p-8 sticky top-24">
-                <h2 className="text-xl font-bold mb-8 flex items-center gap-3">
-                  <span className="p-2 bg-primary/20 rounded-lg text-primary material-symbols-outlined">add_circle</span>
-                  Yeni Blog Yazısı
-                </h2>
+                <div className="flex items-center justify-between gap-4 mb-8">
+                  <h2 className="text-xl font-bold flex items-center gap-3">
+                    <span className="p-2 bg-primary/20 rounded-lg text-primary material-symbols-outlined">add_circle</span>
+                    {editingPostId ? 'Blog Yazısını Düzenle' : 'Yeni Blog Yazısı'}
+                  </h2>
+                  {editingPostId && (
+                    <button onClick={resetBlogForm} className="text-xs font-bold text-text-secondary hover:text-white">
+                      İptal
+                    </button>
+                  )}
+                </div>
                 <form onSubmit={addBlog} className="space-y-6">
                   <div>
                     <label className="block text-[10px] font-bold text-text-secondary uppercase mb-2 tracking-widest">Kapak Görseli</label>
@@ -317,7 +504,7 @@ const Admin: React.FC = () => {
                     <textarea placeholder="Kısa Özet..." value={newBlog.desc} onChange={e => setNewBlog({...newBlog, desc: e.target.value})} className="w-full bg-background-dark border border-surface-border rounded-xl px-4 py-4 text-sm h-28 resize-none focus:border-primary outline-none" />
                     <textarea placeholder="Makale İçeriği" value={newBlog.content} onChange={e => setNewBlog({...newBlog, content: e.target.value})} className="w-full bg-background-dark border border-surface-border rounded-xl px-4 py-4 text-sm h-48 focus:border-primary outline-none" />
                   </div>
-                  <button type="submit" className="w-full bg-primary py-4 rounded-xl font-bold hover:bg-primary-hover shadow-lg transition-all">Yayına Al</button>
+                  <button type="submit" className="w-full bg-primary py-4 rounded-xl font-bold hover:bg-primary-hover shadow-lg transition-all">{editingPostId ? 'Değişiklikleri Kaydet' : 'Yayına Al'}</button>
                 </form>
               </div>
             </div>
@@ -335,12 +522,80 @@ const Admin: React.FC = () => {
                         <p className="text-[10px] text-text-secondary mt-1">{blog.date} • {blog.category}</p>
                       </div>
                     </div>
-                    <button onClick={() => deleteItem(blog.id, 'blog')} className="p-3 text-red-500 hover:bg-red-500/10 rounded-xl transition-all opacity-0 group-hover:opacity-100">
-                      <span className="material-symbols-outlined">delete</span>
-                    </button>
+                    <div className="flex items-center gap-2">
+                      <button onClick={() => startEditBlog(blog)} className="p-3 text-primary hover:bg-primary/10 rounded-xl transition-all opacity-0 group-hover:opacity-100">
+                        <span className="material-symbols-outlined">edit</span>
+                      </button>
+                      <button onClick={() => deleteItem(blog.id, 'blog')} className="p-3 text-red-500 hover:bg-red-500/10 rounded-xl transition-all opacity-0 group-hover:opacity-100">
+                        <span className="material-symbols-outlined">delete</span>
+                      </button>
+                    </div>
                   </div>
                 ))}
                </div>
+            </div>
+          </div>
+        )}
+
+        {activeTab === 'services' && (
+          <div className="grid lg:grid-cols-12 gap-10 animate-in fade-in duration-500">
+            <div className="lg:col-span-5">
+              <div className="bg-surface-dark border border-surface-border rounded-3xl p-8 sticky top-24">
+                <div className="flex items-center justify-between gap-4 mb-8">
+                  <h2 className="text-xl font-bold flex items-center gap-3">
+                    <span className="p-2 bg-primary/20 rounded-lg text-primary material-symbols-outlined">engineering</span>
+                    {editingServiceId ? 'Hizmeti Düzenle' : 'Yeni Hizmet'}
+                  </h2>
+                  {editingServiceId && (
+                    <button onClick={resetServiceForm} className="text-xs font-bold text-text-secondary hover:text-white">
+                      İptal
+                    </button>
+                  )}
+                </div>
+                <form onSubmit={submitService} className="space-y-4">
+                  <div className="grid grid-cols-2 gap-4">
+                    <input type="text" placeholder="ID (01)" value={serviceForm.id} onChange={(e) => setServiceForm({ ...serviceForm, id: e.target.value })} className="bg-background-dark border border-surface-border rounded-xl px-4 py-4 text-sm focus:border-primary outline-none" />
+                    <input type="text" placeholder="İkon" value={serviceForm.icon} onChange={(e) => setServiceForm({ ...serviceForm, icon: e.target.value })} className="bg-background-dark border border-surface-border rounded-xl px-4 py-4 text-sm focus:border-primary outline-none" />
+                  </div>
+                  <input type="text" placeholder="Hizmet Başlığı" value={serviceForm.title} onChange={(e) => setServiceForm({ ...serviceForm, title: e.target.value })} className="w-full bg-background-dark border border-surface-border rounded-xl px-4 py-4 text-sm focus:border-primary outline-none" />
+                  <input type="text" placeholder="Alt Başlık / Slogan" value={serviceForm.header} onChange={(e) => setServiceForm({ ...serviceForm, header: e.target.value })} className="w-full bg-background-dark border border-surface-border rounded-xl px-4 py-4 text-sm focus:border-primary outline-none" />
+                  <input type="text" placeholder="Görsel URL" value={serviceForm.image} onChange={(e) => setServiceForm({ ...serviceForm, image: e.target.value })} className="w-full bg-background-dark border border-surface-border rounded-xl px-4 py-4 text-sm focus:border-primary outline-none" />
+                  <textarea placeholder="Kısa Açıklama" value={serviceForm.desc} onChange={(e) => setServiceForm({ ...serviceForm, desc: e.target.value })} className="w-full bg-background-dark border border-surface-border rounded-xl px-4 py-4 text-sm h-24 resize-none focus:border-primary outline-none" />
+                  <textarea placeholder="Detaylı Açıklama" value={serviceForm.secondaryDesc} onChange={(e) => setServiceForm({ ...serviceForm, secondaryDesc: e.target.value })} className="w-full bg-background-dark border border-surface-border rounded-xl px-4 py-4 text-sm h-24 resize-none focus:border-primary outline-none" />
+                  <textarea placeholder="Maddeler (her satıra bir madde)" value={serviceForm.bulletsText} onChange={(e) => setServiceForm({ ...serviceForm, bulletsText: e.target.value })} className="w-full bg-background-dark border border-surface-border rounded-xl px-4 py-4 text-sm h-28 resize-none focus:border-primary outline-none" />
+                  <textarea placeholder="Blog / detay sayfası içeriği" value={serviceForm.blogContent} onChange={(e) => setServiceForm({ ...serviceForm, blogContent: e.target.value })} className="w-full bg-background-dark border border-surface-border rounded-xl px-4 py-4 text-sm h-48 resize-none focus:border-primary outline-none" />
+                  <button type="submit" className="w-full bg-primary py-4 rounded-xl font-bold hover:bg-primary-hover shadow-lg transition-all">
+                    {editingServiceId ? 'Değişiklikleri Kaydet' : 'Hizmeti Ekle'}
+                  </button>
+                </form>
+              </div>
+            </div>
+            <div className="lg:col-span-7">
+              <h2 className="text-2xl font-bold mb-8">Kayıtlı Hizmetler</h2>
+              <div className="space-y-4">
+                {services.map((service) => (
+                  <div key={service.id} className="bg-surface-dark border border-surface-border p-5 rounded-2xl flex items-start justify-between gap-4 group hover:border-primary/30 transition-all">
+                    <div className="flex items-start gap-4 min-w-0">
+                      <div className="flex size-14 items-center justify-center rounded-xl bg-primary/10 text-primary shrink-0">
+                        <span className="material-symbols-outlined text-2xl">{service.icon}</span>
+                      </div>
+                      <div className="min-w-0">
+                        <div className="text-[10px] text-primary font-bold uppercase tracking-widest mb-1">Hizmet #{service.id}</div>
+                        <h3 className="font-bold text-white text-lg leading-tight group-hover:text-primary transition-colors">{service.title}</h3>
+                        <p className="text-xs text-text-secondary mt-2 line-clamp-2">{service.desc}</p>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-2 shrink-0">
+                      <button onClick={() => startEditService(service)} className="p-3 text-primary hover:bg-primary/10 rounded-xl transition-all">
+                        <span className="material-symbols-outlined">edit</span>
+                      </button>
+                      <button onClick={() => deleteService(service.id)} className="p-3 text-red-500 hover:bg-red-500/10 rounded-xl transition-all">
+                        <span className="material-symbols-outlined">delete</span>
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         )}
@@ -412,6 +667,7 @@ const Admin: React.FC = () => {
             {/* Hidden file inputs for editing */}
             <input type="file" ref={editLogoRef} className="hidden" accept="image/*" onChange={handleEditLogoUpload} />
             <input type="file" ref={editBlogImgRef} className="hidden" accept="image/*" onChange={handleEditBlogImgUpload} />
+            <input type="file" ref={editServiceImgRef} className="hidden" accept="image/*" onChange={handleEditServiceImgUpload} />
 
             {/* Partner Logos */}
             <div>
@@ -476,6 +732,41 @@ const Admin: React.FC = () => {
                       </div>
                       <div className="p-4">
                         <h3 className="text-sm font-bold text-white truncate">{b.title}</h3>
+                        <span className="text-[10px] text-primary font-bold uppercase tracking-wider opacity-0 group-hover:opacity-100 transition-all">Görseli Değiştir</span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            <div>
+              <h2 className="text-2xl font-bold mb-2">Hizmet Görselleri</h2>
+              <p className="text-text-secondary text-sm mb-8">Bir hizmet görseline tıklayarak yenisiyle değiştirebilirsiniz.</p>
+              {services.length === 0 ? (
+                <div className="text-center py-16 border-2 border-dashed border-surface-border rounded-3xl opacity-40">
+                  <span className="material-symbols-outlined text-5xl mb-3">engineering</span>
+                  <p className="text-text-secondary">Henüz hizmet eklenmemiş.</p>
+                </div>
+              ) : (
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {services.map((service) => (
+                    <div
+                      key={service.id}
+                      className="group relative cursor-pointer bg-surface-dark border border-surface-border rounded-2xl overflow-hidden hover:border-primary/50 transition-all"
+                      onClick={() => { setEditingServiceImageId(service.id); editServiceImgRef.current?.click(); }}
+                    >
+                      <div className="relative h-44 bg-background-dark">
+                        {service.image
+                          ? <img src={service.image} alt={service.title} className="w-full h-full object-cover" />
+                          : <div className="w-full h-full flex items-center justify-center"><span className="material-symbols-outlined text-4xl text-white/10">image</span></div>
+                        }
+                        <div className="absolute inset-0 bg-primary/0 group-hover:bg-primary/20 transition-all flex items-center justify-center">
+                          <span className="material-symbols-outlined text-white text-3xl opacity-0 group-hover:opacity-100 transition-all drop-shadow-lg">edit</span>
+                        </div>
+                      </div>
+                      <div className="p-4">
+                        <h3 className="text-sm font-bold text-white truncate">{service.title}</h3>
                         <span className="text-[10px] text-primary font-bold uppercase tracking-wider opacity-0 group-hover:opacity-100 transition-all">Görseli Değiştir</span>
                       </div>
                     </div>

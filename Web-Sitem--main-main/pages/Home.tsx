@@ -1,8 +1,9 @@
 ﻿
 import React, { useState, useRef, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { GoogleGenAI } from "@google/genai";
 import { useSiteMedia } from '../hooks/useSiteMedia';
+import { useServicesData } from '../hooks/useServicesData';
 
 interface Partner {
   id: string | number;
@@ -13,6 +14,7 @@ interface Partner {
 
 const Home: React.FC = () => {
   const { heroBg, aboutImg } = useSiteMedia();
+  const navigate = useNavigate();
   const [query, setQuery] = useState('');
   const [aiResult, setAiResult] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -20,6 +22,7 @@ const Home: React.FC = () => {
   const [partners, setPartners] = useState<Partner[]>([]);
   
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const serviceItems = useServicesData();
 
   useEffect(() => {
     fetch('/api/data')
@@ -108,13 +111,6 @@ const Home: React.FC = () => {
           <div className="h-full w-full bg-cover bg-center bg-no-repeat" style={{backgroundImage: `url("${heroBg}")`}}></div>
         </div>
         <div className="relative z-20 mx-auto flex max-w-7xl flex-col items-center gap-8 px-4 text-center sm:px-6 lg:px-8">
-          <div className="inline-flex items-center rounded-full border border-primary/30 bg-primary/10 px-4 py-1.5 backdrop-blur-sm">
-            <span className="mr-2 flex h-2 w-2 relative">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
-            </span>
-            <span className="text-xs font-bold uppercase tracking-wider text-primary">ATEX Sertifikalı Çözümler</span>
-          </div>
           <h1 className="max-w-4xl text-4xl font-black leading-tight tracking-tight text-white sm:text-5xl md:text-6xl lg:text-7xl">
             ATEX ve Exproof <br className="hidden sm:block"/>
             Çözümlerinde <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-orange-400">Uzman Mühendislik</span>
@@ -319,20 +315,17 @@ const Home: React.FC = () => {
             </Link>
           </div>
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {[
-              { icon: 'content_paste_search', title: 'Periyodik Kontrol', desc: 'Periyodik denetim ve raporlama hizmetleri ile ekipmanlarınızın standartlara uygunluğunu doğrulayın.' },
-              { icon: 'school', title: 'Ekipman Eğitimi', desc: 'Doğru ekipman kullanımı için teknik danışmanlık ve sertifikalı personel eğitim programları.' },
-              { icon: 'warning', title: 'ATEX Eğitimi', desc: 'Çalışan güvenliği ve tesis standartları için kapsamlı ATEX farkındalık ve uyum eğitimi.' },
-              { icon: 'description', title: 'PKD Raporu', desc: 'Yasal zorunluluklara tam uyumlu Patlamadan Korunma Dokümanı (PKD) hazırlığı.' },
-              { icon: 'build', title: 'Montaj Danışmanlığı', desc: 'Exproof ekipmanların güvenli kurulumu, montajı ve devreye alınması süreçlerinde uzman desteği.' },
-              { icon: 'trending_up', title: 'İyileştirme Danışmanlığı', desc: 'Denetim sonrası tespit edilen eksikliklerin giderilmesi ve sistem optimizasyon çalışmaları.' },
-            ].map((service, idx) => (
-              <div key={idx} className="group relative flex flex-col gap-4 rounded-xl border border-surface-border bg-surface-dark p-8 transition-all hover:border-primary/50 hover:shadow-[0_0_30px_rgba(223,123,17,0.1)]">
+            {serviceItems.map((service) => (
+              <div 
+                key={service.id}
+                onClick={() => navigate(`/hizmetlerimiz/${service.id}`)}
+                className="group relative cursor-pointer flex flex-col gap-4 rounded-xl border border-surface-border bg-surface-dark p-8 transition-all hover:border-primary/50 hover:shadow-[0_0_30px_rgba(223,123,17,0.1)] hover:-translate-y-1"
+              >
                 <div className="flex size-14 items-center justify-center rounded-lg bg-[#322a24] text-primary transition-colors group-hover:bg-primary group-hover:text-white">
                   <span className="material-symbols-outlined text-3xl">{service.icon}</span>
                 </div>
                 <div>
-                  <h4 className="mb-2 text-xl font-bold text-white">{service.title}</h4>
+                  <h4 className="mb-2 text-xl font-bold text-white group-hover:text-primary transition-colors">{service.title}</h4>
                   <p className="text-sm text-[#b9ab9d] leading-relaxed">{service.desc}</p>
                 </div>
                 <div className="mt-auto pt-4">

@@ -51,7 +51,6 @@ const Footer: React.FC = () => {
             <ul className="space-y-3">
               <li><Link className="text-sm text-[#b9ab9d] hover:text-primary transition-colors" to="/">Ana Sayfa</Link></li>
               <li><Link className="text-sm text-[#b9ab9d] hover:text-primary transition-colors" to="/hakkimizda">Hakkımızda</Link></li>
-              <li><Link className="text-sm text-[#b9ab9d] hover:text-primary transition-colors" to="/sertifikalar">Sertifikalar</Link></li>
               <li><Link className="text-sm text-[#b9ab9d] hover:text-primary transition-colors" to="/blog">Blog</Link></li>
               <li><Link className="text-sm text-[#b9ab9d] hover:text-primary transition-colors" to="/teknolojiler">Kullandığımız Teknolojiler</Link></li>
               <li><Link className="text-sm text-[#b9ab9d] hover:text-primary transition-colors" to="/firmalar">Çalıştığımız Firmalar</Link></li>

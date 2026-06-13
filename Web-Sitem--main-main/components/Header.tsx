@@ -11,7 +11,6 @@ const Header: React.FC = () => {
     { name: 'Ana Sayfa', path: '/' },
     { name: 'Hakkımızda', path: '/hakkimizda' },
     { name: 'Hizmetlerimiz', path: '/hizmetlerimiz' },
-    { name: 'Sertifikalar', path: '/sertifikalar' },
     { name: 'Blog', path: '/blog' },
     { name: 'Kullandığımız Teknolojiler', path: '/teknolojiler' },
     { name: 'Çalıştığımız Firmalar', path: '/firmalar' },

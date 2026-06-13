@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useSiteMedia } from '../hooks/useSiteMedia';
-const BLOG_IMG_1 = "https://lh3.googleusercontent.com/aida-public/AB6AXuB6wTbHc_SgIqYniTx0Cwbu_AU1PZdYqdOop7KEraI7yihlBsztotjiPNViDslcyEWrKbjlmT7r19yfoJ7CelPQ3AVFgjcJbpXsqseGIJwsKRMf3vJBw81793tdfbRpuVTkNMUHY2-aG9QuD93X907blE75_lfx9riiqQ3aekMw1pBkIjdiF72spvkCb_OrG38tvjm-_SVphCgc5eaWYJMoSBUjZYYcZ4VkS5c2bSSr_XfPXJuqeFhIInmCmL31MLrpGfbtXd59dJWd";
+import { defaultBlogs } from '../data/defaultBlogs';
 
 interface BlogPost {
   id: string | number;
@@ -13,7 +13,7 @@ interface BlogPost {
   desc: string;
   img?: string;
   icon?: string;
-  content?: React.ReactNode | string;
+  content?: string;
 }
 
 const Blog: React.FC = () => {
@@ -21,46 +21,23 @@ const Blog: React.FC = () => {
   const [selectedPost, setSelectedPost] = useState<BlogPost | null>(null);
   const [displayPosts, setDisplayPosts] = useState<BlogPost[]>([]);
 
-  const defaultPosts: BlogPost[] = [
-    {
-      id: 1,
-      category: "Soru-Cevap",
-      date: "22 Mayıs 2023",
-      readTime: "10 Dakika Okuma",
-      title: "Exproof Muayenesi Hakkında Sıkça Sorulan Sorular",
-      desc: "Sanayi tesislerinde patlayıcı ortam riski bulunan alanlarda güvenliğin sağlanması ve exproof muayenesi hakkında merak edilen her şey.",
-      img: BLOG_IMG_1,
-      content: (
-        <div className="space-y-6 text-[#b9ab9d] leading-relaxed">
-          <p>Sanayi tesislerinde patlayıcı ortam riski bulunan alanlarda güvenliğin sağlanması, yalnızca yasal bir zorunluluk değil; aynı zamanda iş sürekliliği ve çalışan sağlığı açısından hayati bir konudur.</p>
-          <h3 className="text-xl font-bold text-white mt-8 mb-4">Exproof Muayenesi Nedir?</h3>
-          <p>Exproof muayenesi; patlayıcı atmosfer bulunan veya bulunma ihtimali olan alanlarda kullanılan elektrikli ve mekanik ekipmanların, ilgili standartlara ve mevzuata uygunluğunun kontrol edilmesidir.</p>
-        </div>
-      )
-    },
-    {
-      id: 2,
-      category: "Teknik",
-      date: "12 Mayıs 2023",
-      readTime: "5 Dakika Okuma",
-      title: "ATEX Standartlarındaki Yenilikler",
-      desc: "2023 yılı itibarıyla güncellenen ATEX direktifleri ve tesislerin uyum süreçlerinde dikkat etmesi gereken kritik noktalar.",
-      img: HERO_BG
-    }
-  ];
+  const resolvedDefaultPosts: BlogPost[] = defaultBlogs.map((post) => ({
+    ...post,
+    img: post.img || heroBg,
+  }));
 
   useEffect(() => {
     fetch('/api/data')
       .then(r => r.json())
       .then(data => {
         if (data.blogs && data.blogs.length > 0) {
-          setDisplayPosts([...data.blogs, ...defaultPosts]);
+          setDisplayPosts(data.blogs);
         } else {
-          setDisplayPosts(defaultPosts);
+          setDisplayPosts(resolvedDefaultPosts);
         }
       })
-      .catch(() => setDisplayPosts(defaultPosts));
-  }, []);
+      .catch(() => setDisplayPosts(resolvedDefaultPosts));
+  }, [heroBg]);
 
   if (selectedPost) {
     return (
@@ -137,7 +114,16 @@ const Blog: React.FC = () => {
             {displayPosts.map((post) => (
               <article 
                 key={post.id} 
-                className="group flex flex-col overflow-hidden rounded-xl border border-surface-border bg-surface-dark transition-all hover:border-primary/50 hover:shadow-[0_0_30px_rgba(223,123,17,0.1)]"
+                onClick={() => setSelectedPost(post)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    setSelectedPost(post);
+                  }
+                }}
+                role="button"
+                tabIndex={0}
+                className="group flex cursor-pointer flex-col overflow-hidden rounded-xl border border-surface-border bg-surface-dark transition-all hover:border-primary/50 hover:shadow-[0_0_30px_rgba(223,123,17,0.1)]"
               >
                 <div className="relative h-56 overflow-hidden">
                   {post.img ? (
@@ -164,7 +150,9 @@ const Blog: React.FC = () => {
                   <p className="mb-6 text-sm leading-relaxed text-[#b9ab9d] line-clamp-3">{post.desc}</p>
                   <div className="mt-auto">
                     <button 
+                      type="button"
                       onClick={() => setSelectedPost(post)}
+                      onKeyDown={(e) => e.stopPropagation()}
                       className="inline-flex items-center gap-2 text-sm font-bold text-primary transition-colors hover:text-primary-hover"
                     >
                       Devamını Oku
