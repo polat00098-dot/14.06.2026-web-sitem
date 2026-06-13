@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800" role="img" aria-label="Clients hero illustration">
+  <rect width="1200" height="800" fill="#181511"/>
+  <rect x="100" y="120" width="1000" height="560" rx="36" fill="#27211c" stroke="#54483b" stroke-width="2"/>
+  <g opacity="0.9">
+    <rect x="180" y="220" width="150" height="150" rx="28" fill="#df7b11"/>
+    <rect x="380" y="220" width="150" height="150" rx="28" fill="#ffffff" opacity="0.12"/>
+    <rect x="580" y="220" width="150" height="150" rx="28" fill="#df7b11" opacity="0.7"/>
+    <rect x="780" y="220" width="150" height="150" rx="28" fill="#ffffff" opacity="0.12"/>
+  </g>
+  <text x="180" y="500" fill="#ffffff" font-family="Manrope, Arial, sans-serif" font-size="44" font-weight="800">Güvenilir Referanslar</text>
+</svg>

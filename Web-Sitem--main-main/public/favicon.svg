@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="EX Dönüşüm Mühendislik">
+  <defs>
+    <linearGradient id="g" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#df7b11"/>
+      <stop offset="100%" stop-color="#ffb24c"/>
+    </linearGradient>
+  </defs>
+  <rect width="64" height="64" rx="16" fill="#181511"/>
+  <circle cx="32" cy="32" r="20" fill="url(#g)" opacity="0.18"/>
+  <path d="M18 20h13.5c6.1 0 10.5 3.4 10.5 8.5 0 3.7-2.1 6.4-5.4 7.6L44 44H35l-6.2-7.8H27V44h-9V20zm9 13.1h3.4c2.6 0 4.3-1.2 4.3-3.5 0-2.2-1.7-3.4-4.3-3.4H27v6.9z" fill="url(#g)"/>
+</svg>

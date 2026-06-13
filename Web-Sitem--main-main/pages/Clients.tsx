@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
 
-const HERO_IMG = "https://lh3.googleusercontent.com/aida-public/AB6AXuB6wTbHc_SgIqYniTx0Cwbu_AU1PZdYqdOop7KEraI7yihlBsztotjiPNViDslcyEWrKbjlmT7r19yfoJ7CelPQ3AVFgjcJbpXsqseGIJwsKRMf3vJBw81793tdfbRpuVTkNMUHY2-aG9QuD93X907blE75_lfx9riiqQ3aekMw1pBkIjdiF72spvkCb_OrG38tvjm-_SVphCgc5eaWYJMoSBUjZYYcZ4VkS5c2bSSr_XfPXJuqeFhIInmCmL31MLrpGfbtXd59dJWd";
+const HERO_IMG = '/media-clients.svg';
 
 interface Partner {
   id: string | number;
@@ -23,7 +23,7 @@ const Clients: React.FC = () => {
   }, []);
 
   const getFallbackLogo = (name: string) => {
-    return `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=27211c&color=df7b11&size=200&bold=true&font-size=0.35`;
+    return '/media-logo.svg';
   };
 
   const sectors = [
