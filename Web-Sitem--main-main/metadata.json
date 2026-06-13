@@ -1,0 +1,7 @@
+{
+  "name": "EX Dönüşüm Mühendislik",
+  "description": "Endüstriyel tesisler için profesyonel ATEX ve Exproof mühendislik çözümleri sunan kapsamlı bir kurumsal web sitesi.",
+  "requestFramePermissions": [
+    "geolocation"
+  ]
+}
