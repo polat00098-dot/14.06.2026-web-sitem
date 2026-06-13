@@ -18,7 +18,7 @@ export const defaultBlogs: DefaultBlogPost[] = [
     readTime: '8 Dakika Okuma',
     title: 'Exproof Muayenesi Hakkında Sıkça Sorulan Sorular',
     desc: 'Exproof muayenesinin kapsamı, sıklığı ve raporlama süreçleri hakkında en çok sorulan sorulara net yanıtlar.',
-    img: '/media-blog.svg',
+    img: 'https://lh3.googleusercontent.com/aida-public/AB6AXuB6wTbHc_SgIqYniTx0Cwbu_AU1PZdYqdOop7KEraI7yihlBsztotjiPNViDslcyEWrKbjlmT7r19yfoJ7CelPQ3AVFgjcJbpXsqseGIJwsKRMf3vJBw81793tdfbRpuVTkNMUHY2-aG9QuD93X907blE75_lfx9riiqQ3aekMw1pBkIjdiF72spvkCb_OrG38tvjm-_SVphCgc5eaWYJMoSBUjZYYcZ4VkS5c2bSSr_XfPXJuqeFhIInmCmL31MLrpGfbtXd59dJWd',
     content: `Exproof muayenesi, patlayıcı ortam bulunan işletmelerde kullanılan ekipmanların güvenliğini doğrulayan temel bir kontrol sürecidir. Doğru planlandığında hem yasal uygunluk sağlar hem de plansız duruş riskini azaltır.
 
 Exproof Muayenesi Ne Sıklıkla Yapılmalı?
@@ -34,7 +34,7 @@ Muayene raporunda uygunsuzluklar, risk seviyeleri, önerilen düzeltici faaliyet
     readTime: '7 Dakika Okuma',
     title: 'ATEX Zone Sınıflandırması Pratik Rehberi',
     desc: 'Zone 0, Zone 1 ve Zone 2 farklarını sahadan örneklerle anlattığımız pratik bir rehber.',
-    img: '/media-blog.svg',
+    img: 'https://lh3.googleusercontent.com/aida-public/AB6AXuB6wTbHc_SgIqYniTx0Cwbu_AU1PZdYqdOop7KEraI7yihlBsztotjiPNViDslcyEWrKbjlmT7r19yfoJ7CelPQ3AVFgjcJbpXsqseGIJwsKRMf3vJBw81793tdfbRpuVTkNMUHY2-aG9QuD93X907blE75_lfx9riiqQ3aekMw1pBkIjdiF72spvkCb_OrG38tvjm-_SVphCgc5eaWYJMoSBUjZYYcZ4VkS5c2bSSr_XfPXJuqeFhIInmCmL31MLrpGfbtXd59dJWd',
     content: `Doğru zone sınıflandırması, doğru ekipman seçiminin başlangıç noktasıdır. Hatalı sınıflandırma hem güvenlik riski hem de gereksiz yatırım maliyeti doğurur.
 
 Zone 0
@@ -50,7 +50,7 @@ Zone 1 alanlarında patlayıcı atmosfer normal işletmede ara sıra oluşabilir
     readTime: '6 Dakika Okuma',
     title: 'Exproof Kablo Rakoru Seçiminde 5 Kritik Kural',
     desc: 'Yanlış rakor seçimi kaynaklı riskleri azaltmak için sahada uygulanan 5 temel kural.',
-    img: '/media-blog.svg',
+    img: 'https://lh3.googleusercontent.com/aida-public/AB6AXuB6wTbHc_SgIqYniTx0Cwbu_AU1PZdYqdOop7KEraI7yihlBsztotjiPNViDslcyEWrKbjlmT7r19yfoJ7CelPQ3AVFgjcJbpXsqseGIJwsKRMf3vJBw81793tdfbRpuVTkNMUHY2-aG9QuD93X907blE75_lfx9riiqQ3aekMw1pBkIjdiF72spvkCb_OrG38tvjm-_SVphCgc5eaWYJMoSBUjZYYcZ4VkS5c2bSSr_XfPXJuqeFhIInmCmL31MLrpGfbtXd59dJWd',
     content: `Kablo rakoru, exproof sistemin küçük ama kritik parçalarından biridir. Uygun olmayan rakorlar koruma bütünlüğünü bozabilir.
 
 Zone ve Gaz Grubuna Uyum
@@ -69,7 +69,7 @@ Montaj Torku
     readTime: '9 Dakika Okuma',
     title: 'PKD Dokümanı Hazırlarken Yapılan 7 Yaygın Hata',
     desc: 'Patlamadan Korunma Dokümanı hazırlanırken sık yapılan hataları ve doğru yaklaşımı adım adım anlattık.',
-    img: '/media-blog.svg',
+    img: 'https://lh3.googleusercontent.com/aida-public/AB6AXuB6wTbHc_SgIqYniTx0Cwbu_AU1PZdYqdOop7KEraI7yihlBsztotjiPNViDslcyEWrKbjlmT7r19yfoJ7CelPQ3AVFgjcJbpXsqseGIJwsKRMf3vJBw81793tdfbRpuVTkNMUHY2-aG9QuD93X907blE75_lfx9riiqQ3aekMw1pBkIjdiF72spvkCb_OrG38tvjm-_SVphCgc5eaWYJMoSBUjZYYcZ4VkS5c2bSSr_XfPXJuqeFhIInmCmL31MLrpGfbtXd59dJWd',
     content: `PKD yalnızca bir formalite değildir; işletmenin patlama risk yönetimi planıdır. Kopyala-yapıştır dokümanlar sahadaki gerçek riskleri görünmez hale getirir.
 
 En Sık Hatalar
@@ -85,7 +85,7 @@ PKD, saha gözlemi, proses analizi, ekipman envanteri ve güncel mevzuat kontrol
     readTime: '6 Dakika Okuma',
     title: 'Muayene Sonrası Düzeltici Faaliyet Planı Nasıl Kurulur?',
     desc: 'Uygunsuzlukların kapanmasını hızlandıran, denetlenebilir bir düzeltici faaliyet planı için temel adımlar.',
-    img: '/media-blog.svg',
+    img: 'https://lh3.googleusercontent.com/aida-public/AB6AXuB6wTbHc_SgIqYniTx0Cwbu_AU1PZdYqdOop7KEraI7yihlBsztotjiPNViDslcyEWrKbjlmT7r19yfoJ7CelPQ3AVFgjcJbpXsqseGIJwsKRMf3vJBw81793tdfbRpuVTkNMUHY2-aG9QuD93X907blE75_lfx9riiqQ3aekMw1pBkIjdiF72spvkCb_OrG38tvjm-_SVphCgc5eaWYJMoSBUjZYYcZ4VkS5c2bSSr_XfPXJuqeFhIInmCmL31MLrpGfbtXd59dJWd',
     content: `Muayene raporu sonrasında en değerli adım, uygunsuzlukları aksiyona dönüştürmektir. İyi planlanmış bir aksiyon listesi, güvenlik seviyesini kısa sürede yükseltir.
 
 Önceliklendirme
@@ -104,7 +104,7 @@ Kapanan faaliyetlerin sahada gerçekten uygulandığı, tekrar muayene veya tekn
     readTime: '7 Dakika Okuma',
     title: 'Exproof Ekipman Envanteri Nasıl Oluşturulur?',
     desc: 'Denetim ve bakım süreçlerini hızlandıran doğru envanter yapısını adım adım anlattık.',
-    img: '/media-blog.svg',
+    img: 'https://lh3.googleusercontent.com/aida-public/AB6AXuB6wTbHc_SgIqYniTx0Cwbu_AU1PZdYqdOop7KEraI7yihlBsztotjiPNViDslcyEWrKbjlmT7r19yfoJ7CelPQ3AVFgjcJbpXsqseGIJwsKRMf3vJBw81793tdfbRpuVTkNMUHY2-aG9QuD93X907blE75_lfx9riiqQ3aekMw1pBkIjdiF72spvkCb_OrG38tvjm-_SVphCgc5eaWYJMoSBUjZYYcZ4VkS5c2bSSr_XfPXJuqeFhIInmCmL31MLrpGfbtXd59dJWd',
     content: `Doğru ekipman envanteri, exproof güvenlik yönetiminin temelidir. Hangi ekipmanın nerede olduğu ve hangi sertifikaya sahip olduğu net değilse, bakım ve denetim süreçleri dağınık ilerler.
 
 Envanterde Neler Olmalı?
@@ -120,7 +120,7 @@ Sahadaki etiketleme ile dijital kayıt birebir eşleşmeli; revizyon sonrası ve
     readTime: '6 Dakika Okuma',
     title: 'Patlayıcı Ortamlarda Sıcak Çalışma İzni Rehberi',
     desc: 'Kaynak, taşlama ve kesme gibi sıcak işler için güvenli izin sürecinin püf noktaları.',
-    img: '/media-blog.svg',
+    img: 'https://lh3.googleusercontent.com/aida-public/AB6AXuB6wTbHc_SgIqYniTx0Cwbu_AU1PZdYqdOop7KEraI7yihlBsztotjiPNViDslcyEWrKbjlmT7r19yfoJ7CelPQ3AVFgjcJbpXsqseGIJwsKRMf3vJBw81793tdfbRpuVTkNMUHY2-aG9QuD93X907blE75_lfx9riiqQ3aekMw1pBkIjdiF72spvkCb_OrG38tvjm-_SVphCgc5eaWYJMoSBUjZYYcZ4VkS5c2bSSr_XfPXJuqeFhIInmCmL31MLrpGfbtXd59dJWd',
     content: `Sıcak çalışma faaliyetleri, patlayıcı ortam bulunan tesislerde en yüksek riskli operasyonlardan biridir. Bu nedenle izin süreçleri resmi ve denetlenebilir olmalıdır.
 
 İzin Öncesi Kontroller
@@ -152,7 +152,7 @@ Teori anlatımını kısa tutup saha simülasyonlarını artırmak, öğrenme ka
     readTime: '7 Dakika Okuma',
     title: 'Ex d, Ex e, Ex i Koruma Tipleri Arasındaki Farklar',
     desc: 'Sahada en çok karşılaşılan üç koruma tipini sade ve teknik olarak doğru biçimde karşılaştırdık.',
-    img: '/media-blog.svg',
+    img: 'https://lh3.googleusercontent.com/aida-public/AB6AXuB6wTbHc_SgIqYniTx0Cwbu_AU1PZdYqdOop7KEraI7yihlBsztotjiPNViDslcyEWrKbjlmT7r19yfoJ7CelPQ3AVFgjcJbpXsqseGIJwsKRMf3vJBw81793tdfbRpuVTkNMUHY2-aG9QuD93X907blE75_lfx9riiqQ3aekMw1pBkIjdiF72spvkCb_OrG38tvjm-_SVphCgc5eaWYJMoSBUjZYYcZ4VkS5c2bSSr_XfPXJuqeFhIInmCmL31MLrpGfbtXd59dJWd',
     content: `Exproof ekipman seçiminde koruma tipi doğru okunmadığında hem güvenlik seviyesi düşer hem de bakım maliyeti artar.
 
 Ex d (Alev Sızdırmaz)

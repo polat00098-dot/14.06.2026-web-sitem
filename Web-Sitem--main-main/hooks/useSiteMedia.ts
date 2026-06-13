@@ -1,8 +1,8 @@
 ﻿import { useEffect, useState } from 'react';
 
 const DEFAULT_LOGO = '/media-logo.svg';
-const DEFAULT_HERO_BG = '/media-hero.svg';
-const DEFAULT_ABOUT_IMG = '/media-about.svg';
+const DEFAULT_HERO_BG = 'https://lh3.googleusercontent.com/aida-public/AB6AXuA57-hs0EKELMi_I5fsQ-__7a0N2SUAZ-VBOYgAYF2-lL0kCHNeowcYiCl8-amxA5jTuM5FN-is16pIAT6_X9E7rrG34pF_QkzNwNZ9UNtDEzmrRIyxZXmddrzEOaa1vrUZurDhk8F7WdvqZgi8ixP31Affux3jVQdFV8RSAHqrasa_h1-EI_TF80EYbnJWxthSTQcW8JhFInWYBlPQzMB8YcGUmiwAA4KWwdW5BWAfmyMFJ6bvlWhzgrDEYADhIST8ZLnx_mvwfK0H';
+const DEFAULT_ABOUT_IMG = 'https://lh3.googleusercontent.com/aida-public/AB6AXuB6wTbHc_SgIqYniTx0Cwbu_AU1PZdYqdOop7KEraI7yihlBsztotjiPNViDslcyEWrKbjlmT7r19yfoJ7CelPQ3AVFgjcJbpXsqseGIJwsKRMf3vJBw81793tdfbRpuVTkNMUHY2-aG9QuD93X907blE75_lfx9riiqQ3aekMw1pBkIjdiF72spvkCb_OrG38tvjm-_SVphCgc5eaWYJMoSBUjZYYcZ4VkS5c2bSSr_XfPXJuqeFhIInmCmL31MLrpGfbtXd59dJWd';
 export const SITE_MEDIA_UPDATED_EVENT = 'ex-donusum-site-media-updated';
 
 const defaultMedia = () => ({

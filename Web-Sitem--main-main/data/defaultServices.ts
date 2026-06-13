@@ -23,7 +23,7 @@ export const defaultServices: ServiceItem[] = [
       "Yasal Mevzuata Uygun Raporlama",
       "Risk Değerlendirmesi ve Önceliklendirme"
     ],
-    image: "/media-service.svg",
+    image: "https://images.unsplash.com/photo-1581092917056-0c4c3acd3789?w=1200&q=80",
     blogContent: `## Exproof Ekipmanların Periyodik Kontrolünün Önemi
 
 Endüstriyel tesislerde patlayıcı ortamlar, elektrik ekipmanlarından kaynaklanan tutuşturma kaynaklarının kontrolüyle bertaraf edilmelidir. Bu bağlamda, exproof ekipmanlar kritik bir rol oynar. Ancak, bu ekipmanlar zamanla aşınır ve işlevini yitirmesi sonucunda, patlama riskleri önemli ölçüde artabilir.
@@ -73,7 +73,7 @@ Tüm kontrol bulguları, EN 60079-17 standardına uygun olarak detaylı raporlar
       "Kablo Glend Bağlantı Uygulamaları",
       "Bakım ve Onarım Prosedürleri"
     ],
-    image: "/media-service.svg",
+    image: "https://images.unsplash.com/photo-1552664730-d307ca884978?w=1200&q=80",
     blogContent: `## Eğitim Yoluyla Güvenlik Kültürü Oluşturma
 
 İnsan faktörü, endüstriyel güvenlik açısından oldukça kritiktir. Doğru eğitim almış personel, olası riskleri önceden fark edebilir ve uygun corrective action'ları alabilir.
@@ -116,7 +116,7 @@ Eğitim seansları %50 teorik, %50 pratik yapılır. Katılımcılar gerçek eki
       "Bölge (Zone) Sınıflandırmaları",
       "ATEX Direktifleri Hakkında Genel Bilgi"
     ],
-    image: "/media-service.svg",
+    image: "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=1200&q=80",
     blogContent: `## ATEX Direktifi ve Patlayıcı Ortamlar
 
 ATEX, "Directive 2014/34/EU - Patlayıcı Ortamlarda Kullanılmak Üzere Tasarlanan Cihazlar" anlamına gelir. Bu direktif, Avrupa Birliği üyesi ülkelerde patlayıcı ortamlar için gerekli güvenlik standartlarını belirler.
@@ -158,7 +158,7 @@ Patlayıcı ortamlar, tehlike sıklığına göre sınıflandırılır:
       "Kimyasal Madde Risk Analizi",
       "Teknik ve Organizasyonel Tedbirler"
     ],
-    image: "/media-service.svg",
+    image: "https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?w=1200&q=80",
     blogContent: `## Patlamadan Korunma Dokümanı (PKD) Nedir?
 
 Patlamadan Korunma Dokümanı (PKD), patlayıcı ortamların bulunduğu işletmelerin hazırlaması gereken yasal bir belgedir. Bu dokümanda, işletmedeki tüm patlama riskleri tanımlanır ve bu riskleri yönetmek için alınacak tedbirler detaylıca açıklanır.
@@ -220,7 +220,7 @@ Türkiye'de, Çalışma Bakanlığı tarafından yayınlanan yönetmelikler, pat
       "Maliyet Etkin Çözümler",
       "EN 60079-14 Montaj Standartlarına Uyum"
     ],
-    image: "/media-service.svg",
+    image: "https://images.unsplash.com/photo-1581092917692-b2ecb2171659?w=1200&q=80",
     blogContent: `## Exproof Ekipman Seçimi: Teknik ve Ekonomik Perspektif
 
 Patlayıcı ortamlar için uygun exproof ekipmanları seçmek, sadece teknik bir değil aynı zamanda stratejik bir karar olmalıdır. Yanlış seçim, hem çalışan güvenliğini tehdit eder hem de işletme bütçesine olumsuz yansır.
@@ -273,7 +273,7 @@ EX Dönüşüm Mühendislik olarak, aşağıdaki hizmetleri sunmaktayız:
       "Revizyon Süreç Takibi",
       "Uygunsuzlukların Kapatılması ve Doğrulama"
     ],
-    image: "/media-service.svg",
+    image: "https://images.unsplash.com/photo-1552664730-d307ca884978?w=1200&q=80",
     blogContent: `## Muayene Sonrası Aksiyonların Yönetimi
 
 Muayene raporları tamamlandıktan sonra, belirtilen eksikliklerin giderilmesi önemli bir aşamadır. Bu sürecin sistematik ve etkili bir şekilde yönetilmesi, işletmenin güvenlik hedeflerine ulaşmasını sağlar.
