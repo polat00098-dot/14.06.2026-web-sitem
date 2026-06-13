@@ -92,6 +92,7 @@ const Admin: React.FC = () => {
         setIsAuthenticated(response.ok);
       })
       .catch(() => {
+        // API çalışmıyor (statik hosting) - session yok, login ekranı göster
         setIsAuthenticated(false);
       })
       .finally(() => {
@@ -109,15 +110,39 @@ const Admin: React.FC = () => {
         body: JSON.stringify({ password }),
       });
 
-      if (!response.ok) {
+      // API mevcut ve başarılı
+      if (response.ok) {
+        setIsAuthenticated(true);
+        setPassword('');
+        return;
+      }
+
+      // API mevcut ama şifre yanlış
+      if (response.status === 401) {
         alert('Hatalı şifre! Lütfen tekrar deneyin.');
         return;
       }
 
-      setIsAuthenticated(true);
-      setPassword('');
+      // API mevcut değil (Vercel gibi statik hosting) - yerel kontrol
+      if (response.status === 404 || response.status === 405) {
+        if (password === 'S4rmam21') {
+          setIsAuthenticated(true);
+          setPassword('');
+        } else {
+          alert('Hatalı şifre! Lütfen tekrar deneyin.');
+        }
+        return;
+      }
+
+      alert('Hatalı şifre! Lütfen tekrar deneyin.');
     } catch {
-      alert('Giriş sırasında bir hata oluştu.');
+      // Ağ hatası (API hiç çalışmıyor) - yerel kontrol
+      if (password === 'S4rmam21') {
+        setIsAuthenticated(true);
+        setPassword('');
+      } else {
+        alert('Hatalı şifre! Lütfen tekrar deneyin.');
+      }
     }
   };
 
