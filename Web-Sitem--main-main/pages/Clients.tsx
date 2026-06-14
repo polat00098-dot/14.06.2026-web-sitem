@@ -14,12 +14,16 @@ const Clients: React.FC = () => {
   const [partners, setPartners] = useState<Partner[]>([]);
 
   useEffect(() => {
+    const loadLS = () => { try { const r = localStorage.getItem('ex-donusum-data'); return r ? JSON.parse(r) : null; } catch { return null; } };
     fetch('/api/data')
-      .then(r => r.json())
+      .then(r => { if (!r.ok) throw new Error('unavailable'); return r.json(); })
       .then(data => {
         if (data.partners) setPartners(data.partners);
       })
-      .catch(() => {});
+      .catch(() => {
+        const ls = loadLS();
+        if (ls?.partners) setPartners(ls.partners);
+      });
   }, []);
 
   const getFallbackLogo = (name: string) => {

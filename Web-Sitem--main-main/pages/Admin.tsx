@@ -22,6 +22,14 @@ interface BlogPost {
   content?: string;
 }
 
+const LS_KEY = 'ex-donusum-data';
+function loadLS(): Record<string, unknown> {
+  try { const r = localStorage.getItem(LS_KEY); return r ? JSON.parse(r) : {}; } catch { return {}; }
+}
+function mergeLS(patch: object) {
+  try { localStorage.setItem(LS_KEY, JSON.stringify({ ...loadLS(), ...patch })); } catch {}
+}
+
 const emptyServiceForm = {
   id: '',
   title: '',
@@ -74,7 +82,7 @@ const Admin: React.FC = () => {
 
   useEffect(() => {
     fetch('/api/data')
-      .then(r => r.json())
+      .then(r => { if (!r.ok) throw new Error('unavailable'); return r.json(); })
       .then(data => {
         setPartners(data.partners || []);
         setBlogs(data.blogs && data.blogs.length > 0 ? data.blogs : defaultBlogs);
@@ -83,7 +91,18 @@ const Admin: React.FC = () => {
         setSiteHeroBg(data.heroBg || '');
         setSiteAboutImg(data.aboutImg || '');
       })
-      .catch(() => {});
+      .catch(() => {
+        const ls = loadLS();
+        const lsPartners = ls.partners as Partner[] | undefined;
+        const lsBlogs = ls.blogs as BlogPost[] | undefined;
+        const lsServices = ls.services as ServiceItem[] | undefined;
+        setPartners(lsPartners || []);
+        setBlogs(lsBlogs && lsBlogs.length > 0 ? lsBlogs : defaultBlogs);
+        setServices(Array.isArray(lsServices) && lsServices.length > 0 ? lsServices : defaultServices);
+        setSiteLogo((ls.logo as string) || '');
+        setSiteHeroBg((ls.heroBg as string) || '');
+        setSiteAboutImg((ls.aboutImg as string) || '');
+      });
   }, []);
 
   useEffect(() => {
@@ -147,6 +166,9 @@ const Admin: React.FC = () => {
   };
 
   const saveToServer = (patch: object) => {
+    // Her zaman localStorage'a kaydet (API yoksa birincil depolama)
+    mergeLS(patch);
+    // API'ye de senkronize etmeyi dene
     fetch('/api/data', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },

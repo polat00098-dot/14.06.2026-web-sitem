@@ -27,16 +27,23 @@ const Blog: React.FC = () => {
   }));
 
   useEffect(() => {
+    const loadFromLS = () => {
+      try { const r = localStorage.getItem('ex-donusum-data'); return r ? JSON.parse(r) : null; } catch { return null; }
+    };
     fetch('/api/data')
-      .then(r => r.json())
+      .then(r => { if (!r.ok) throw new Error('unavailable'); return r.json(); })
       .then(data => {
         if (data.blogs && data.blogs.length > 0) {
           setDisplayPosts(data.blogs);
         } else {
-          setDisplayPosts(resolvedDefaultPosts);
+          const ls = loadFromLS();
+          setDisplayPosts(ls?.blogs?.length > 0 ? ls.blogs : resolvedDefaultPosts);
         }
       })
-      .catch(() => setDisplayPosts(resolvedDefaultPosts));
+      .catch(() => {
+        const ls = loadFromLS();
+        setDisplayPosts(ls?.blogs?.length > 0 ? ls.blogs : resolvedDefaultPosts);
+      });
   }, [heroBg]);
 
   if (selectedPost) {
