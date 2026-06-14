@@ -1,4 +1,5 @@
 ﻿import { useEffect, useState } from 'react';
+import { loadSiteData } from '../lib/siteData';
 
 const DEFAULT_LOGO = '/media-logo.svg';
 const DEFAULT_HERO_BG = 'https://lh3.googleusercontent.com/aida-public/AB6AXuA57-hs0EKELMi_I5fsQ-__7a0N2SUAZ-VBOYgAYF2-lL0kCHNeowcYiCl8-amxA5jTuM5FN-is16pIAT6_X9E7rrG34pF_QkzNwNZ9UNtDEzmrRIyxZXmddrzEOaa1vrUZurDhk8F7WdvqZgi8ixP31Affux3jVQdFV8RSAHqrasa_h1-EI_TF80EYbnJWxthSTQcW8JhFInWYBlPQzMB8YcGUmiwAA4KWwdW5BWAfmyMFJ6bvlWhzgrDEYADhIST8ZLnx_mvwfK0H';
@@ -15,29 +16,15 @@ export function notifySiteMediaUpdated() {
   window.dispatchEvent(new Event(SITE_MEDIA_UPDATED_EVENT));
 }
 
-function loadLS(): Record<string, string> {
-  try { const r = localStorage.getItem('ex-donusum-data'); return r ? JSON.parse(r) : {}; } catch { return {}; }
-}
-
 export function useSiteMedia() {
   const [media, setMedia] = useState(defaultMedia);
 
   const fetchMedia = () => {
-    fetch('/api/data')
-      .then(r => { if (!r.ok) throw new Error('unavailable'); return r.json(); })
-      .then(data => setMedia({
-        logo: data.logo || DEFAULT_LOGO,
-        heroBg: data.heroBg || DEFAULT_HERO_BG,
-        aboutImg: data.aboutImg || DEFAULT_ABOUT_IMG,
-      }))
-      .catch(() => {
-        const ls = loadLS();
-        setMedia({
-          logo: ls.logo || DEFAULT_LOGO,
-          heroBg: ls.heroBg || DEFAULT_HERO_BG,
-          aboutImg: ls.aboutImg || DEFAULT_ABOUT_IMG,
-        });
-      });
+    loadSiteData().then(data => setMedia({
+      logo: data.logo || DEFAULT_LOGO,
+      heroBg: data.heroBg || DEFAULT_HERO_BG,
+      aboutImg: data.aboutImg || DEFAULT_ABOUT_IMG,
+    }));
   };
 
   useEffect(() => {

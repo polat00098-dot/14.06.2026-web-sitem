@@ -3,6 +3,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { GoogleGenAI } from "@google/genai";
 import { useSiteMedia } from '../hooks/useSiteMedia';
+import { loadSiteData } from '../lib/siteData';
 import { useServicesData } from '../hooks/useServicesData';
 
 interface Partner {
@@ -25,10 +26,9 @@ const Home: React.FC = () => {
   const serviceItems = useServicesData();
 
   useEffect(() => {
-    fetch('/api/data')
-      .then(r => r.json())
-      .then(data => { if (data.partners) setPartners(data.partners); })
-      .catch(() => {});
+    loadSiteData().then(data => {
+      if (data.partners) setPartners(data.partners as Partner[]);
+    });
   }, []);
 
   const getFallbackLogo = (name: string) => {

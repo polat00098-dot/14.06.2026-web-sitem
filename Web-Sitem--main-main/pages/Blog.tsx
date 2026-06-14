@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useSiteMedia } from '../hooks/useSiteMedia';
 import { defaultBlogs } from '../data/defaultBlogs';
+import { loadSiteData } from '../lib/siteData';
 
 interface BlogPost {
   id: string | number;
@@ -27,23 +28,10 @@ const Blog: React.FC = () => {
   }));
 
   useEffect(() => {
-    const loadFromLS = () => {
-      try { const r = localStorage.getItem('ex-donusum-data'); return r ? JSON.parse(r) : null; } catch { return null; }
-    };
-    fetch('/api/data')
-      .then(r => { if (!r.ok) throw new Error('unavailable'); return r.json(); })
-      .then(data => {
-        if (data.blogs && data.blogs.length > 0) {
-          setDisplayPosts(data.blogs);
-        } else {
-          const ls = loadFromLS();
-          setDisplayPosts(ls?.blogs?.length > 0 ? ls.blogs : resolvedDefaultPosts);
-        }
-      })
-      .catch(() => {
-        const ls = loadFromLS();
-        setDisplayPosts(ls?.blogs?.length > 0 ? ls.blogs : resolvedDefaultPosts);
-      });
+    loadSiteData().then(data => {
+      const lb = data.blogs as BlogPost[] | undefined;
+      setDisplayPosts(lb && lb.length > 0 ? lb : resolvedDefaultPosts);
+    });
   }, [heroBg]);
 
   if (selectedPost) {

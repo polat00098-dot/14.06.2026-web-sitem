@@ -3,6 +3,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { notifySiteMediaUpdated } from '../hooks/useSiteMedia';
 import { defaultServices, type ServiceItem } from '../data/defaultServices';
 import { defaultBlogs } from '../data/defaultBlogs';
+import { loadSiteData, saveSiteData } from '../lib/siteData';
 
 interface Partner {
   id: string;
@@ -20,14 +21,6 @@ interface BlogPost {
   desc: string;
   img?: string;
   content?: string;
-}
-
-const LS_KEY = 'ex-donusum-data';
-function loadLS(): Record<string, unknown> {
-  try { const r = localStorage.getItem(LS_KEY); return r ? JSON.parse(r) : {}; } catch { return {}; }
-}
-function mergeLS(patch: object) {
-  try { localStorage.setItem(LS_KEY, JSON.stringify({ ...loadLS(), ...patch })); } catch {}
 }
 
 const emptyServiceForm = {
@@ -81,28 +74,16 @@ const Admin: React.FC = () => {
 
 
   useEffect(() => {
-    fetch('/api/data')
-      .then(r => { if (!r.ok) throw new Error('unavailable'); return r.json(); })
-      .then(data => {
-        setPartners(data.partners || []);
-        setBlogs(data.blogs && data.blogs.length > 0 ? data.blogs : defaultBlogs);
-        setServices(Array.isArray(data.services) && data.services.length > 0 ? data.services : defaultServices);
-        setSiteLogo(data.logo || '');
-        setSiteHeroBg(data.heroBg || '');
-        setSiteAboutImg(data.aboutImg || '');
-      })
-      .catch(() => {
-        const ls = loadLS();
-        const lsPartners = ls.partners as Partner[] | undefined;
-        const lsBlogs = ls.blogs as BlogPost[] | undefined;
-        const lsServices = ls.services as ServiceItem[] | undefined;
-        setPartners(lsPartners || []);
-        setBlogs(lsBlogs && lsBlogs.length > 0 ? lsBlogs : defaultBlogs);
-        setServices(Array.isArray(lsServices) && lsServices.length > 0 ? lsServices : defaultServices);
-        setSiteLogo((ls.logo as string) || '');
-        setSiteHeroBg((ls.heroBg as string) || '');
-        setSiteAboutImg((ls.aboutImg as string) || '');
-      });
+    loadSiteData().then(data => {
+      setPartners((data.partners as Partner[]) || []);
+      const lb = data.blogs as BlogPost[] | undefined;
+      setBlogs(lb && lb.length > 0 ? lb : defaultBlogs);
+      const ls = data.services as ServiceItem[] | undefined;
+      setServices(Array.isArray(ls) && ls.length > 0 ? ls : defaultServices);
+      setSiteLogo(data.logo || '');
+      setSiteHeroBg(data.heroBg || '');
+      setSiteAboutImg(data.aboutImg || '');
+    });
   }, []);
 
   useEffect(() => {
@@ -166,22 +147,7 @@ const Admin: React.FC = () => {
   };
 
   const saveToServer = (patch: object) => {
-    // Her zaman localStorage'a kaydet (API yoksa birincil depolama)
-    mergeLS(patch);
-    // API'ye de senkronize etmeyi dene
-    fetch('/api/data', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      credentials: 'include',
-      body: JSON.stringify(patch),
-    })
-      .then((response) => {
-        if (response.status === 401) {
-          setIsAuthenticated(false);
-          alert('Oturumunuz sona erdi. Lütfen tekrar giriş yapın.');
-        }
-      })
-      .catch(() => {});
+    saveSiteData(patch);
   };
 
   const savePartners = (list: Partner[]) => {
